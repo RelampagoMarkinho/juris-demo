@@ -36,12 +36,16 @@ const TITULOS: Record<string, string> = {
 };
 
 
-/** Logo oficial do escritório (PNG transparente em dourado — usar sempre sobre fundo escuro). */
-export function Brand({ className = "", src }: { className?: string; src?: string }) {
+/**
+ * Marca do escritório. Versão de demonstração: sem logo fixa — mostra a logo enviada em
+ * Configurações → Dados da empresa, se houver; senão, só o nome do escritório (ou nada).
+ */
+export function Brand({ className = "", src, nome }: { className?: string; src?: string; nome?: string }) {
+  if (!src && !nome) return null;
   return (
     <div className={`brand ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src || "/logo.png"} alt="Logo do escritório" className="brand-logo" />
+      {src ? <img src={src} alt="Logo do escritório" className="brand-logo" /> : <div className="brand-name">{nome}</div>}
     </div>
   );
 }
@@ -49,7 +53,7 @@ export function Brand({ className = "", src }: { className?: string; src?: strin
 /** Marca do menu lateral: usa a logo cadastrada em Configurações → Empresa, se houver. */
 function BrandEmpresa() {
   const { empresa } = useEmpresa();
-  return <Brand src={empresa.logo?.url} />;
+  return <Brand src={empresa.logo?.url} nome={empresa.nomeFantasia} />;
 }
 
 export default function Shell({ children }: { children: React.ReactNode }) {

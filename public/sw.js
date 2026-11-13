@@ -5,7 +5,7 @@
 
 const VERSAO = "nj-v1";
 const ESTATICO = `${VERSAO}-estatico`;
-const PRECACHE = ["/offline.html", "/icones/icone-192.png", "/icones/icone-512.png", "/logo.png"];
+const PRECACHE = ["/offline.html", "/icones/icone-192.png", "/icones/icone-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(ESTATICO).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
