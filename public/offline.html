@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e0d0c">
+  <title>Sem conexão — Juris</title>
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box;
+      background: #0e0d0c; color: #f2ede3; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center;
+    }
+    .caixa { max-width: 380px; }
+    img { width: 220px; max-width: 70vw; margin-bottom: 28px; }
+    h1 { font-size: 20px; font-weight: 600; margin: 0 0 10px; color: #e6cd92; }
+    p { color: #b3a88f; line-height: 1.5; margin: 0 0 24px; }
+    button {
+      border: 0; border-radius: 999px; padding: 12px 26px; font-weight: 600; font-size: 15px; cursor: pointer;
+      background: linear-gradient(135deg, #f5e6bd 0%, #d4b06a 42%, #a67c3e 72%, #e6cd92 100%); color: #0e0d0c;
+    }
+  </style>
+</head>
+<body>
+  <div class="caixa">
+    <img src="/logo.png" alt="Juris">
+    <h1>Sem conexão com a internet</h1>
+    <p>O sistema precisa de internet para mostrar os dados atualizados do escritório. Verifique a conexão e tente de novo.</p>
+    <button onclick="location.reload()">Tentar novamente</button>
+  </div>
+</body>
+</html>

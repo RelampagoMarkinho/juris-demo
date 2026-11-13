@@ -1,0 +1,16 @@
+# Configuração do Firebase App Hosting — versão de DEMONSTRAÇÃO
+# https://firebase.google.com/docs/app-hosting/configure
+runConfig:
+  minInstances: 0   # escala a zero quando ninguém está usando (custo ~0)
+  maxInstances: 1
+  cpu: 1
+  memoryMiB: 512
+
+# O conversor de PDF (Gotenberg no Cloud Run) é opcional. Sem ele, os documentos gerados
+# podem ser impressos pela pré-visualização, mas o PDF não é salvo no perfil do cliente.
+# Para ativar, crie o serviço no projeto da demonstração e descomente:
+# env:
+#   - variable: GOTENBERG_URL
+#     value: https://gotenberg-XXXXXXXX.southamerica-east1.run.app
+#     availability:
+#       - RUNTIME

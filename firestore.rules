@@ -1,0 +1,170 @@
+rules_version = '2';
+
+// Regras do sistema Juris.
+// Perfis: Administrador, Advogado, Estagiário, Secretária (campo "perfil" em /usuarios/{uid}).
+// O que cada perfil pode fazer fica em /config/permissoes (tela Usuários → Permissões por perfil),
+// no formato { "<perfil>": { "<ação>": true/false } }. O Administrador sempre pode tudo.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() {
+      return request.auth != null;
+    }
+    function caminhoEu() {
+      return /databases/$(database)/documents/usuarios/$(request.auth.uid);
+    }
+    function eu() {
+      return get(caminhoEu()).data;
+    }
+    function ativo() {
+      return logado() && exists(caminhoEu()) && eu().ativo == true;
+    }
+    function admin() {
+      return ativo() && eu().perfil == 'Administrador';
+    }
+    function caminhoPermissoes() {
+      return /databases/$(database)/documents/config/permissoes;
+    }
+    // Pode fazer a ação? (Administrador sempre; os demais conforme a tabela de permissões.)
+    function pode(acao) {
+      return admin() || (ativo()
+        && exists(caminhoPermissoes())
+        && get(caminhoPermissoes()).data.get(eu().perfil, {}).get(acao, false) == true);
+    }
+    function setupFeito() {
+      return exists(/databases/$(database)/documents/config/setup);
+    }
+    function perfilValido(p) {
+      return p in ['Administrador', 'Advogado', 'Estagiário', 'Secretária'];
+    }
+    function muda(campos) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(campos);
+    }
+
+    // Marca que o primeiro administrador já foi criado (lida na tela de login, antes de logar).
+    match /config/setup {
+      allow read: if true;
+      allow create: if logado()
+        && !setupFeito()
+        && request.resource.data.adminUid == request.auth.uid
+        && existsAfter(caminhoEu());
+      allow update, delete: if false;
+    }
+
+    // Tabela de permissões por perfil: todos leem, só o administrador altera.
+    match /config/permissoes {
+      allow read: if ativo();
+      allow write: if admin();
+    }
+
+    // Dados da empresa (Configurações → Empresa).
+    match /config/empresa {
+      allow read: if ativo();
+      allow write: if pode('config_empresa');
+    }
+
+    match /usuarios/{uid} {
+      allow read: if ativo() || (logado() && request.auth.uid == uid);
+
+      // Admin cria qualquer usuário; quem tem permissão cria, mas nunca um Administrador.
+      // Na configuração inicial, a própria pessoa cria o 1º admin.
+      allow create: if (admin() && perfilValido(request.resource.data.perfil))
+        || (pode('usuarios_criar')
+            && perfilValido(request.resource.data.perfil)
+            && request.resource.data.perfil != 'Administrador')
+        || (logado()
+            && request.auth.uid == uid
+            && !setupFeito()
+            && existsAfter(/databases/$(database)/documents/config/setup)
+            && request.resource.data.perfil == 'Administrador'
+            && request.resource.data.ativo == true);
+
+      // Admin edita tudo. Quem tem permissão edita/ativa outros usuários, menos administradores
+      // (e não promove ninguém a Administrador). O próprio usuário só altera nome, nascimento e último acesso.
+      allow update: if (admin() && perfilValido(request.resource.data.perfil))
+        || (request.auth.uid != uid
+            && resource.data.perfil != 'Administrador'
+            && request.resource.data.perfil != 'Administrador'
+            && perfilValido(request.resource.data.perfil)
+            && ((pode('usuarios_editar') && muda(['nome', 'perfil', 'oab', 'dataNascimento', 'atualizadoEm']))
+                || (pode('usuarios_ativar') && muda(['ativo', 'atualizadoEm']))))
+        || (ativo()
+            && request.auth.uid == uid
+            && muda(['nome', 'dataNascimento', 'ultimoAcesso', 'atualizadoEm']));
+
+      allow delete: if admin() && request.auth.uid != uid;
+    }
+
+    // Clientes: a lista é lida por todos os usuários ativos (nomes aparecem em processos, financeiro etc.);
+    // cadastrar, editar e excluir dependem da permissão.
+    match /clientes/{id} {
+      allow read: if ativo();
+      allow create: if pode('clientes_criar');
+      allow update: if pode('clientes_editar');
+      allow delete: if pode('clientes_excluir');
+    }
+
+    // Corretores que indicam clientes (dados de contato e chave PIX).
+    match /corretores/{id} {
+      allow read: if pode('corretores_ver');
+      allow create: if pode('corretores_criar');
+      allow update: if pode('corretores_editar');
+      allow delete: if pode('corretores_excluir');
+    }
+
+    match /processos/{id} {
+      allow read: if pode('processos_ver');
+      allow create: if pode('processos_criar');
+      // Situação, prazo e andamentos; atualizar do tribunal só mexe nos dados do tribunal/andamentos/vara.
+      allow update: if pode('processos_editar')
+        || (pode('processos_tribunal') && muda(['tribunal', 'andamentos', 'vara', 'atualizadoEm']));
+      allow delete: if pode('processos_excluir');
+    }
+
+    match /lancamentos/{id} {
+      allow read: if pode('financeiro_ver');
+      // Pagar uma conta a pagar cria a despesa paga do mês: vale para quem pode dar baixa.
+      allow create: if pode('financeiro_criar')
+        || (pode('financeiro_baixar') && request.resource.data.get('contaPagarId', '') != '');
+      // Editar: qualquer campo. Dar baixa: só a situação e a data do pagamento.
+      allow update: if pode('financeiro_editar')
+        || (pode('financeiro_baixar') && muda(['status', 'pagoEm', 'atualizadoEm']));
+      allow delete: if pode('financeiro_excluir');
+    }
+
+    // Contas a pagar do escritório (despesas fixas e parceladas).
+    match /contasPagar/{id} {
+      allow read: if pode('financeiro_ver');
+      allow create: if pode('financeiro_criar');
+      allow update: if pode('financeiro_editar');
+      allow delete: if pode('financeiro_excluir');
+    }
+
+    // Registro dos arquivos do perfil de cada cliente (o arquivo fica no Storage).
+    match /documentos/{id} {
+      allow read: if ativo();
+      allow create: if request.resource.data.clienteId is string && (
+        (request.resource.data.get('origem', 'enviado') == 'gerado'
+          && (pode('clientes_gerar') || pode('clientes_editar_gerado')))
+        || (request.resource.data.get('origem', 'enviado') != 'gerado'
+          && (pode('clientes_anexar')
+              || (request.resource.data.get('assinadoDe', '') != '' && pode('clientes_anexar_assinado')))));
+      allow update: if pode('clientes_editar_gerado') || pode('clientes_anexar');
+      allow delete: if (resource.data.get('origem', 'enviado') == 'gerado'
+          && (pode('clientes_excluir_gerado') || pode('clientes_editar_gerado')))
+        || (resource.data.get('origem', 'enviado') != 'gerado' && pode('clientes_excluir_anexo'));
+    }
+
+    // Modelos de documentos montados no editor do sistema.
+    match /modelos/{id} {
+      allow read: if ativo();
+      allow create, update: if pode('documentos_modelos');
+      allow delete: if pode('documentos_excluir_modelo');
+    }
+
+    // Qualquer outra coleção: bloqueada.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
