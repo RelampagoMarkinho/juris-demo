@@ -59,7 +59,7 @@ export default function GeradorFormulario({ form, cliente, dados, onVoltar, onCl
         {situacao === "salvo" && (
           <div className="aviso ok"><CheckCircle2 size={16} />
             <div>PDF salvo em <b>Documentos gerados</b> de {cliente.nome}.{" "}
-              <Link className="link" href={`/clientes/${cliente.id}?aba=gerados`} onClick={onClose}>Ver no perfil</Link></div>
+              <Link className="link" href={`/clientes/ver?id=${cliente.id}&aba=gerados`} onClick={onClose}>Ver no perfil</Link></div>
           </div>
         )}
         {situacao === "falhou" && <div className="aviso"><AlertTriangle size={16} /><div>Não foi possível salvar no cliente ({falha}). Você ainda pode imprimir.</div></div>}

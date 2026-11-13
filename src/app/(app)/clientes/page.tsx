@@ -107,7 +107,7 @@ export default function ClientesPage() {
             </thead>
             <tbody>
               {filtrados.map((c) => (
-                <tr key={c.id} className="click" onClick={() => router.push(`/clientes/${c.id}`)}>
+                <tr key={c.id} className="click" onClick={() => router.push(`/clientes/ver?id=${c.id}`)}>
                   <td>
                     <div className="who">
                       <span className="avatar sm gray">{iniciais(c.nome)}</span>
@@ -141,10 +141,10 @@ export default function ClientesPage() {
       {/* Etapa 1: dados do cliente → Etapa 2: processo do cliente */}
       {novo && (
         <FormCliente inicial={{ ...CLIENTE_VAZIO }} onClose={() => setNovo(false)}
-          onSalvo={(id, nome, tipoProcesso) => (podeFazer("processos_criar") ? setEtapa2({ id, nome, tipoProcesso }) : router.push(`/clientes/${id}`))} />
+          onSalvo={(id, nome, tipoProcesso) => (podeFazer("processos_criar") ? setEtapa2({ id, nome, tipoProcesso }) : router.push(`/clientes/ver?id=${id}`))} />
       )}
       {etapa2 && (
-        <NovoProcesso etapa clienteFixo={etapa2} onClose={() => { const id = etapa2.id; setEtapa2(null); router.push(`/clientes/${id}?aba=processos`); }} />
+        <NovoProcesso etapa clienteFixo={etapa2} onClose={() => { const id = etapa2.id; setEtapa2(null); router.push(`/clientes/ver?id=${id}&aba=processos`); }} />
       )}
     </>
   );

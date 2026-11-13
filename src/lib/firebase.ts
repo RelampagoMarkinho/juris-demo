@@ -1,45 +1,16 @@
-import { deleteApp, getApp, getApps, initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
-import { getFirestore, initializeFirestore, type Firestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// Versão de demonstração: sem Firebase. Banco, login e arquivos ficam no próprio navegador
+// (ver src/lib/local). As funções abaixo mantêm os mesmos nomes usados pelo resto do sistema.
+import { criarConta, getAuth } from "./local/auth";
+import { getFirestore } from "./local/firestore";
+import { getStorage } from "./local/storage";
 
-// Configuração pública do app web (não é segredo — a proteção fica nas regras do Firestore).
-const firebaseConfig = {
-  apiKey: "PREENCHER",
-  authDomain: "PREENCHER.firebaseapp.com",
-  projectId: "PREENCHER",
-  storageBucket: "PREENCHER.firebasestorage.app",
-  messagingSenderId: "PREENCHER",
-  appId: "PREENCHER",
-};
+export const auth = getAuth();
+export const db = getFirestore();
+export const storage = getStorage();
 
-export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-// ignoreUndefinedProperties: campos opcionais não preenchidos (undefined) são simplesmente omitidos.
-function criarFirestore(): Firestore {
-  try {
-    return initializeFirestore(app, { ignoreUndefinedProperties: true });
-  } catch {
-    return getFirestore(app); // já inicializado (recarga em desenvolvimento)
-  }
-}
-export const db = criarFirestore();
-export const storage = getStorage(app);
-
-/**
- * Cria uma conta no Firebase Auth SEM derrubar a sessão do administrador logado.
- * (createUserWithEmailAndPassword faz login automático; por isso usamos uma instância secundária.)
- */
+/** Cria a conta de outro usuário SEM trocar a sessão do administrador logado. */
 export async function criarContaAuth(email: string, senha: string): Promise<string> {
-  const secundario = initializeApp(firebaseConfig, `criar-${Date.now()}`);
-  try {
-    const authSec = getAuth(secundario);
-    const cred = await createUserWithEmailAndPassword(authSec, email, senha);
-    await signOut(authSec);
-    return cred.user.uid;
-  } finally {
-    await deleteApp(secundario);
-  }
+  return (await criarConta(email, senha, false)).user.uid;
 }
 
 const ERROS: Record<string, string> = {
@@ -67,6 +38,6 @@ const ERROS: Record<string, string> = {
 
 export function mensagemErro(e: unknown): string {
   const code = (e as { code?: string })?.code ?? "";
-  if (code === "tamanho") return (e as Error).message;
+  if (code === "tamanho" || code === "demo" || code === "not-found") return (e as Error).message;
   return ERROS[code] ?? `Erro inesperado${code ? ` (${code})` : ""}.`;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { caminho } from "./base";
 
 type EventoInstalar = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
@@ -12,7 +13,7 @@ const avisar = () => ouvintes.forEach((f) => f());
 export function iniciarPwa() {
   if (typeof window === "undefined") return;
   if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+    navigator.serviceWorker.register(caminho("/sw.js"), { scope: caminho("/") }).catch(() => {});
   }
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();

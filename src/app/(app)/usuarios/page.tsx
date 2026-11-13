@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, Eye, EyeOff, Lock, Pencil, Plus, RotateCcw, Save, ShieldCheck } from "lucide-react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "@/lib/local/firestore";
 import { Modal } from "@/components/Shell";
 import { StatCard } from "@/components/ui";
 import { useAuth } from "@/components/AuthProvider";

@@ -56,7 +56,7 @@ function Modelos() {
           <h3>Modelos de documentos</h3>
           <div className="card-actions">
             {podeGerar && <button className="btn" onClick={() => setGerarId("")}><Wand2 size={16} /> Gerar documento</button>}
-            {podeEditar && <Link className="btn btn-primary" href="/documentos/modelo/novo"><Plus size={16} /> Novo modelo</Link>}
+            {podeEditar && <Link className="btn btn-primary" href="/documentos/modelo?id=novo"><Plus size={16} /> Novo modelo</Link>}
           </div>
         </div>
         <div className="aviso" style={{ marginBottom: 16 }}>
@@ -79,7 +79,7 @@ function Modelos() {
                   <td>
                     <div className="card-actions">
                       {podeGerar && <button className="btn" style={{ height: 32, padding: "0 12px" }} onClick={() => setGerarId(m.id)}><Wand2 size={14} /> Gerar</button>}
-                      {podeEditar && <Link className="icon-btn sm" aria-label="Editar" title="Editar modelo" href={`/documentos/modelo/${m.id}`}><Pencil size={15} /></Link>}
+                      {podeEditar && <Link className="icon-btn sm" aria-label="Editar" title="Editar modelo" href={`/documentos/modelo?id=${m.id}`}><Pencil size={15} /></Link>}
                       {podeExcluir && <button className="icon-btn sm" aria-label="Excluir" onClick={() => remover(m)}><Trash2 size={15} /></button>}
                     </div>
                   </td>
@@ -125,7 +125,7 @@ function Modelos() {
                     <strong>{m.nome}</strong> <span className="badge" style={{ height: 22, fontSize: 11 }}>{m.categoria}</span>
                     <p className="muted">{m.descricao}</p>
                   </div>
-                  <Link className={`btn ${jaExiste ? "" : "btn-primary"}`} style={{ height: 34 }} href={`/documentos/modelo/novo?pronto=${m.id}`}>
+                  <Link className={`btn ${jaExiste ? "" : "btn-primary"}`} style={{ height: 34 }} href={`/documentos/modelo?id=novo&pronto=${m.id}`}>
                     <Plus size={15} /> {jaExiste ? "Criar outra cópia" : "Usar este modelo"}
                   </Link>
                 </div>
@@ -197,7 +197,7 @@ function DocumentosClientes() {
               {filtrados.map((d) => (
                 <tr key={d.id}>
                   <td><div className="who"><span className="thumb" style={{ width: 40 }}><IconeArquivo tipo={d.tipo} /></span>{d.nome}</div></td>
-                  <td>{d.clienteId ? <Link className="link" href={`/clientes/${d.clienteId}`}>{d.cliente}</Link> : d.cliente}</td>
+                  <td>{d.clienteId ? <Link className="link" href={`/clientes/ver?id=${d.clienteId}`}>{d.cliente}</Link> : d.cliente}</td>
                   <td><span className="badge">{d.categoria ?? "—"}</span></td>
                   <td><span className={`badge ${origemDe(d) === "gerado" ? "gray" : ""}`}>{origemDe(d) === "gerado" ? "Gerado" : "Enviado"}</span></td>
                   <td className="num">{d.tamanho}</td>

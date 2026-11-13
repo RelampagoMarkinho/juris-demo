@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc,
-} from "firebase/firestore";
+} from "@/lib/local/firestore";
 import { db } from "./firebase";
 import { mensagemErro } from "./firebase";
 

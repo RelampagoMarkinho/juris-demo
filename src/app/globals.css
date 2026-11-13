@@ -868,3 +868,8 @@ select option, select optgroup { background-color: var(--surface); color: var(--
 .contas-totais span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
 .contas-totais strong { font-size: 17px; }
 @media (max-width: 560px) { .contas-totais { grid-template-columns: 1fr; } }
+
+/* Versão de demonstração: quadro com o acesso de exemplo na tela de login */
+.demo-acesso { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border: 1px dashed var(--accent); border-radius: 10px; font-size: 13px; }
+.demo-acesso b { color: var(--accent); }
+.demo-acesso button.link { background: none; border: 0; padding: 0; cursor: pointer; font-size: 13px; }

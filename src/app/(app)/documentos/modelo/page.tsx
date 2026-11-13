@@ -1,15 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import EditorModelo from "@/components/editor/EditorModelo";
 import { useColecao } from "@/lib/db";
 import { ehModeloEditor } from "@/lib/documento";
 import type { Modelo } from "@/lib/mock";
 
+// Versão estática (GitHub Pages): o modelo vem no endereço como ?id=... (ou ?id=novo)
 export default function PaginaEditorModelo() {
-  const { id } = useParams<{ id: string }>();
+  return <Suspense fallback={<div className="card empty">Carregando...</div>}><EditorDaUrl /></Suspense>;
+}
+
+function EditorDaUrl() {
+  const id = useSearchParams().get("id") ?? "novo";
   const { podeFazer } = useAuth();
   const { dados: modelos, carregando } = useColecao<Modelo>("modelos");
   const podeEditar = podeFazer("documentos_modelos");

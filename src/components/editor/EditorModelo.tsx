@@ -134,7 +134,7 @@ export default function EditorModelo({ modelo }: { modelo: Modelo | null }) {
       setAlterado(false);
       setSalvo(true);
       setTimeout(() => setSalvo(false), 2000);
-      if (!modelo) router.replace(`/documentos/modelo/${id}`);
+      if (!modelo) router.replace(`/documentos/modelo?id=${id}`);
     } catch (e) {
       setErro(mensagemErro(e));
     } finally {

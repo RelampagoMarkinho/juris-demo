@@ -1,30 +1,34 @@
 # Juris — Gestão para Advocacia (versão de demonstração)
 
-Cópia genérica do sistema, sem dados de clientes e sem a identidade de nenhum escritório,
-para gravar vídeos e apresentar a outras advocacias.
+Versão de demonstração do sistema, **sem banco de dados e sem servidor**: é um site estático
+publicado no GitHub Pages. Serve para gravar vídeos e apresentar o sistema a outras advocacias.
 
-Módulos: Dashboard · Clientes · Processos (consulta ao CNJ/DataJud) · Corretores · Financeiro
-(parcelamentos e contas a pagar) · Documentos (editor de modelos, modelos prontos e formulários
-oficiais em PDF) · Usuários (permissões por perfil) · PWA.
+- Não tem dados de nenhum cliente real. Tudo o que aparece é fictício.
+- Os dados ficam **só no navegador de quem abre o site** (IndexedDB). Cada pessoa vê a sua cópia,
+  e nada é enviado para servidor nenhum.
+- Na primeira visita, o sistema cria o acesso de demonstração e carrega dados de exemplo:
+  **E-mail:** `demo@juris.com.br` · **Senha:** `demo123`.
+- Na tela de login, **Reiniciar demonstração** apaga tudo e volta aos dados de exemplo.
 
-## Configurar o projeto Firebase da demonstração
+Módulos: Dashboard · Clientes · Processos · Corretores · Financeiro (parcelamentos e contas a
+pagar) · Documentos (editor de modelos, modelos prontos e formulários oficiais em PDF) ·
+Usuários (permissões por perfil) · instalação como aplicativo (PWA).
 
-1. Crie um projeto novo no console do Firebase e um app Web nele.
-2. Copie a configuração do app (apiKey, authDomain, projectId...) para `src/lib/firebase.ts`
-   (onde está `PREENCHER`), o ID do projeto para `src/lib/servidor.ts` e para `.firebaserc`.
-3. Ative **Authentication → E-mail/senha**, crie o **Firestore** e o **Storage**.
-4. Publique as regras: `firestore.rules` (Firestore → Regras) e `storage.rules` (Storage → Regras).
-5. Publique o site pelo **App Hosting**, ligado ao repositório do GitHub desta pasta.
-6. No primeiro acesso, a tela de login pede para criar o administrador. Depois, no Dashboard,
-   o botão **Carregar dados de exemplo** preenche clientes, processos e lançamentos fictícios.
+Diferenças em relação à versão completa:
+- A consulta ao tribunal (CNJ) é **simulada** e traz andamentos fictícios.
+- O documento gerado fica salvo já formatado. Para ter o PDF, use **Imprimir → Salvar como PDF**.
+- Não há envio de e-mail (redefinição de senha).
 
-Os modelos prontos usam os dados de **Configurações → Dados da empresa** (advogado responsável,
-OAB, endereço, cidade, telefone e e-mail).
+## Publicar no GitHub Pages
+
+1. Envie este repositório para o GitHub (branch `main`).
+2. No GitHub, abra **Settings → Pages → Source** e escolha **GitHub Actions**.
+3. A cada envio, o workflow `.github/workflows/pages.yml` gera e publica o site em
+   `https://<usuario>.github.io/<repositorio>/`.
 
 ## Rodar localmente
 
 ```bash
 npm install
 npm run dev
-npm run build
 ```

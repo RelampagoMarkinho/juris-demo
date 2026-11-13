@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   // Aniversariantes de hoje até 3 dias (de todos: clientes, corretores e colaboradores).
   const proximosAniversarios = useMemo(() => aniversariantes([
-    ...todosClientes.map((c) => ({ id: c.id, nome: c.nome, tipo: "Cliente" as const, dataNascimento: c.dataNascimento, telefone: c.telefone, link: `/clientes/${c.id}` })),
+    ...todosClientes.map((c) => ({ id: c.id, nome: c.nome, tipo: "Cliente" as const, dataNascimento: c.dataNascimento, telefone: c.telefone, link: `/clientes/ver?id=${c.id}` })),
     ...corretores.filter((k) => k.ativo).map((k) => ({ id: k.id, nome: k.nome, tipo: "Corretor" as const, dataNascimento: k.dataNascimento, telefone: k.telefone, link: "/corretores" })),
     ...equipe.filter((u) => u.ativo).map((u) => ({ id: u.id, nome: u.nome, tipo: "Colaborador" as const, dataNascimento: u.dataNascimento })),
   ], 3), [todosClientes, corretores, equipe]);

@@ -2,6 +2,7 @@
 // então o documento sai idêntico ao do banco. Os arquivos ficam em public/formularios/.
 // Os nomes dos campos (campo) são os nomes internos do PDF — conferidos um a um na posição da página.
 
+import { caminho } from "./base";
 import { PDFDocument, PDFCheckBox, PDFTextField } from "pdf-lib";
 import type { Cliente, Processo } from "./mock";
 
@@ -207,7 +208,7 @@ export function valoresIniciais(f: FormularioPdf, x: Contexto): ValoresPdf {
 }
 
 async function abrirOriginal(f: FormularioPdf) {
-  const bytes = await fetch(f.arquivo).then((r) => {
+  const bytes = await fetch(caminho(f.arquivo)).then((r) => {
     if (!r.ok) throw new Error("Não foi possível abrir o PDF original do formulário.");
     return r.arrayBuffer();
   });

@@ -2,6 +2,7 @@
 // São carregados no editor em "Inserir → Modelo pronto" e depois salvos como um modelo normal.
 // Os dados pessoais dos documentos originais foram trocados por campos automáticos.
 
+import { caminho } from "./base";
 import type { ImagemModelo, PaginaModelo } from "./documento";
 
 const c = (chave: string) => `<span data-campo="${chave}"></span>`;
@@ -13,8 +14,8 @@ const LINHA = "______________________________________________";
 
 /** Timbrado oficial (cabeçalho com logo e rodapé com contatos), servido pelo próprio site. */
 const TIMBRADO = {
-  topo: { arquivo: "/timbrado/demo-cabecalho.png", largura: 210, x: 0, y: 0, proporcao: 0.1194 },
-  rodape: { arquivo: "/timbrado/demo-rodape.png", largura: 126, x: 0, y: 0, proporcao: 0.248 },
+  topo: { arquivo: caminho("/timbrado/demo-cabecalho.png"), largura: 210, x: 0, y: 0, proporcao: 0.1194 },
+  rodape: { arquivo: caminho("/timbrado/demo-rodape.png"), largura: 126, x: 0, y: 0, proporcao: 0.248 },
 };
 
 export type ModeloPronto = {
@@ -427,7 +428,7 @@ ${PODERES}
     categoria: "Outros",
     descricao: "Formulário da CAIXA (15.162) para crédito do Precatório/RPV em conta do beneficiário. Sem o timbrado do escritório.",
     timbrado: {
-      topo: { arquivo: "/timbrado/caixa-cabecalho.png", largura: 148.2, x: 17.6, y: 13.4, proporcao: 0.0857 },
+      topo: { arquivo: caminho("/timbrado/caixa-cabecalho.png"), largura: 148.2, x: 17.6, y: 13.4, proporcao: 0.0857 },
       rodape: null,
     },
     pagina: {

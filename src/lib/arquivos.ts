@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "@/lib/local/storage";
 import { storage } from "./firebase";
 import { excluir, hojeISO, salvar } from "./db";
 import type { Cliente, Documento } from "./mock";
@@ -124,7 +124,7 @@ export async function salvarDocumentoGerado(
 ): Promise<{ id: string; caminho: string }> {
   const arquivo = `${nome}.pdf`;
   const caminho = `clientes/${cliente.id}/gerado_${Date.now()}_${limparNome(arquivo)}`;
-  await uploadBytes(ref(storage, caminho), pdf, { contentType: "application/pdf" });
+  await uploadBytes(ref(storage, caminho), pdf, { contentType: pdf.type || "application/pdf" });
   const id = await salvar<Omit<Documento, "id">>("documentos", {
     origem: "gerado", modeloId, nome: arquivo, categoria, tipo: "pdf", tamanho: tamanhoLegivel(pdf.size), bytes: pdf.size,
     clienteId: cliente.id, cliente: cliente.nome, caminho, enviadoPor: geradoPor, data: hojeISO(), ...(extras ?? {}),

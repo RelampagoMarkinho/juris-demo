@@ -2,7 +2,7 @@
 // no Financeiro, ligado aos demais pelo mesmo `parcelamentoId`. Assim as parcelas entram no
 // "A receber", na inadimplência e no gráfico, e o acordo é acompanhado até a quitação.
 
-import { collection, doc, serverTimestamp, writeBatch } from "firebase/firestore";
+import { collection, doc, serverTimestamp, writeBatch } from "@/lib/local/firestore";
 import { db } from "./firebase";
 import { hojeISO } from "./db";
 import type { Lancamento } from "./mock";

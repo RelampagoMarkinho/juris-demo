@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signOut, type User } from "firebase/auth";
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { onAuthStateChanged, signOut, type User } from "@/lib/local/auth";
+import { doc, onSnapshot, setDoc, updateDoc } from "@/lib/local/firestore";
 import { auth, db } from "@/lib/firebase";
 import type { Usuario } from "@/lib/mock";
 import { PERMISSOES_PADRAO, permitido, type ChavePermissao, type TabelaPermissoes } from "@/lib/permissoes";

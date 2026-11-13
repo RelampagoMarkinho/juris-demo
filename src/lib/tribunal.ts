@@ -1,28 +1,44 @@
 "use client";
 
-import { auth } from "./firebase";
-import type { DadosTribunal } from "./cnj";
+import { tribunalDoCnj, type DadosTribunal } from "./cnj";
 
-/** Busca os dados públicos do processo no CNJ (DataJud), pelo número CNJ. */
+/**
+ * Versão de demonstração: não há servidor para consultar o CNJ (DataJud), então a consulta é
+ * SIMULADA — devolve andamentos fictícios, sempre os mesmos para o mesmo número.
+ */
 export async function consultarTribunal(numero: string): Promise<DadosTribunal> {
-  const token = await auth.currentUser?.getIdToken();
-  if (!token) throw new Error("Faça login novamente.");
-  const r = await fetch("/api/datajud", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ numero }),
-  });
-  if (!r.ok) {
-    const msg = (await r.text().catch(() => "")).trim();
-    // Resposta em HTML = o próprio servidor cortou a espera (o CNJ demorou demais).
-    if (!msg || msg.startsWith("<")) {
-      throw new Error(r.status === 504 || r.status === 503
-        ? "O CNJ demorou demais para responder e a consulta foi interrompida. Tente novamente em alguns minutos."
-        : `Erro ${r.status} na consulta ao tribunal.`);
-    }
-    throw new Error(msg);
-  }
-  return (await r.json()) as DadosTribunal;
+  await new Promise((ok) => setTimeout(ok, 1500));
+  const t = tribunalDoCnj(numero);
+  const digitos = numero.replace(/\D/g, "");
+  const semente = Number(digitos.slice(0, 7)) || 1;
+  const hoje = new Date();
+  const dia = (atras: number) => {
+    const d = new Date(hoje); d.setDate(d.getDate() - atras);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+  const passos = [
+    "Distribuído por sorteio", "Conclusos para despacho", "Despacho — cite-se a parte ré", "Expedição de mandado de citação",
+    "Juntada de mandado cumprido", "Juntada de contestação", "Ato ordinatório — intimação para réplica", "Juntada de petição (réplica)",
+    "Conclusos para decisão", "Decisão — saneamento e organização do processo", "Audiência de instrução designada",
+  ];
+  const qtd = 5 + (semente % 6);
+  const movimentos = passos.slice(0, qtd).map((descricao, i) => ({
+    data: dia((qtd - i) * 23 + (semente % 9)), hora: `${String(9 + ((semente + i) % 8)).padStart(2, "0")}:${String((semente * (i + 3)) % 60).padStart(2, "0")}`,
+    descricao, grau: "G1",
+  })).reverse();
+  return {
+    sigla: t?.sigla ?? "TJ",
+    numero: digitos,
+    classe: "Procedimento Comum Cível",
+    assuntos: ["Indenização por Dano Moral", "Obrigação de Fazer / Não Fazer"].slice(0, 1 + (semente % 2)),
+    orgao: `${1 + (semente % 12)}ª Vara Cível`,
+    graus: ["G1"],
+    sistema: "PJe",
+    formato: "Eletrônico",
+    dataAjuizamento: movimentos[movimentos.length - 1].data,
+    ultimaAtualizacao: new Date().toISOString(),
+    movimentos,
+  };
 }
 
 /** Junta as movimentações do tribunal aos andamentos já registrados (sem duplicar). */

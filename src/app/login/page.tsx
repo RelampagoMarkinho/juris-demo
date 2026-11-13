@@ -6,12 +6,14 @@ import { Eye, EyeOff, Moon, Sun } from "lucide-react";
 import {
   browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword,
   sendPasswordResetEmail, setPersistence, signInWithEmailAndPassword,
-} from "firebase/auth";
-import { doc, getDoc, serverTimestamp, writeBatch } from "firebase/firestore";
+} from "@/lib/local/auth";
+import { doc, getDoc, serverTimestamp, writeBatch } from "@/lib/local/firestore";
 import { auth, db, mensagemErro } from "@/lib/firebase";
 import { useTema } from "@/components/ThemeProvider";
 import { useAuth } from "@/components/AuthProvider";
 import { Brand } from "@/components/Shell";
+import { DEMO_EMAIL, DEMO_SENHA, prepararDemo } from "@/lib/demo";
+import { zerarTudo } from "@/lib/local/banco";
 
 type Modo = "carregando" | "login" | "setup";
 
@@ -38,16 +40,22 @@ export default function LoginPage() {
 
   // Se ainda não existe administrador, mostra a configuração inicial.
   useEffect(() => {
-    const limite = new Promise<never>((_, rej) => setTimeout(() => rej(new Error("timeout")), 10000));
-    Promise.race([getDoc(doc(db, "config", "setup")), limite])
+    // Demonstração: na primeira visita cria o acesso de exemplo e carrega os dados fictícios.
+    prepararDemo()
+      .then(() => getDoc(doc(db, "config", "setup")))
       .then((s) => setModo(s.exists() ? "login" : "setup"))
-      .catch((e) => {
+      .catch(() => {
         setModo("login");
-        setErro((e as { code?: string })?.code === "permission-denied"
-          ? "O banco de dados recusou o acesso: as regras de segurança do Firestore ainda não foram publicadas."
-          : "Não foi possível conectar ao banco de dados. Verifique sua internet ou se o Firestore foi criado no projeto.");
+        setErro("Este navegador bloqueou o armazenamento local (modo anônimo?). Abra a demonstração numa janela normal.");
       });
   }, []);
+
+  const entrarDemo = () => { setEmail(DEMO_EMAIL); setSenha(DEMO_SENHA); setLiberado(true); };
+  const reiniciar = async () => {
+    if (!confirm("Apagar tudo o que foi feito nesta demonstração e voltar aos dados de exemplo?")) return;
+    await zerarTudo();
+    window.location.reload();
+  };
 
   useEffect(() => { if (aviso) setErro(aviso); }, [aviso]);
 
@@ -186,6 +194,17 @@ export default function LoginPage() {
             <button className="btn btn-primary full" disabled={enviando}>
               {enviando ? "Aguarde..." : setup ? "Criar administrador" : "Entrar"}
             </button>
+            {!setup && (
+              <div className="demo-acesso">
+                <b>Versão de demonstração</b>
+                <span>E-mail: {DEMO_EMAIL} · Senha: {DEMO_SENHA}</span>
+                <span className="muted">Os dados são fictícios e ficam só neste navegador.</span>
+                <div className="row-between">
+                  <button type="button" className="link" onClick={entrarDemo}>Preencher acesso</button>
+                  <button type="button" className="link" onClick={reiniciar}>Reiniciar demonstração</button>
+                </div>
+              </div>
+            )}
           </form>
         )}
       </section>

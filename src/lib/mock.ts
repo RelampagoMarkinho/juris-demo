@@ -232,7 +232,7 @@ export const clientes: Cliente[] = [
 
 export const processos: Processo[] = [
   {
-    id: "p1", numero: "1002345-67.2024.8.26.0100", cliente: "Mariana Albuquerque", parteContraria: "Banco Meridional S.A.", area: "Consumidor",
+    id: "p1", numero: "1002345-73.2024.8.26.0100", cliente: "Mariana Albuquerque", parteContraria: "Banco Meridional S.A.", area: "Consumidor",
     vara: "3ª Vara Cível - Foro Central/SP", responsavel: "Dr. Carlos Andrade", valorCausa: 48500, proximoPrazo: "2024-09-19", status: "Em andamento",
     andamentos: [
       { data: "2024-09-10", descricao: "Juntada de contestação pela parte ré" },
@@ -241,7 +241,7 @@ export const processos: Processo[] = [
     ],
   },
   {
-    id: "p2", numero: "0801122-33.2023.5.02.0045", cliente: "Construtora Horizonte Ltda", parteContraria: "João Batista Souza", area: "Trabalhista",
+    id: "p2", numero: "0801122-92.2023.5.02.0045", cliente: "Construtora Horizonte Ltda", parteContraria: "João Batista Souza", area: "Trabalhista",
     vara: "45ª Vara do Trabalho de São Paulo", responsavel: "Dra. Beatriz Lemos", valorCausa: 132000, proximoPrazo: "2024-09-20", status: "Aguardando",
     andamentos: [
       { data: "2024-09-05", descricao: "Audiência de instrução designada para 20/09" },
@@ -249,7 +249,7 @@ export const processos: Processo[] = [
     ],
   },
   {
-    id: "p3", numero: "5009876-12.2022.4.03.6100", cliente: "Transportes Veloz S.A.", parteContraria: "União Federal", area: "Tributário",
+    id: "p3", numero: "5009876-33.2022.4.03.6100", cliente: "Transportes Veloz S.A.", parteContraria: "União Federal", area: "Tributário",
     vara: "12ª Vara Federal Cível/SP", responsavel: "Dr. Carlos Andrade", valorCausa: 870000, proximoPrazo: "2024-09-24", status: "Em andamento",
     andamentos: [
       { data: "2024-09-12", descricao: "Conclusos para sentença" },
@@ -257,7 +257,7 @@ export const processos: Processo[] = [
     ],
   },
   {
-    id: "p4", numero: "1034567-89.2021.8.26.0554", cliente: "Clínica Vida Plena", parteContraria: "Paulo Henrique Dias", area: "Cível",
+    id: "p4", numero: "1034567-95.2021.8.26.0554", cliente: "Clínica Vida Plena", parteContraria: "Paulo Henrique Dias", area: "Cível",
     vara: "2ª Vara Cível de Santo André", responsavel: "Dra. Beatriz Lemos", valorCausa: 25000, proximoPrazo: "—", status: "Concluído",
     andamentos: [
       { data: "2024-05-20", descricao: "Trânsito em julgado — sentença favorável" },
@@ -265,22 +265,22 @@ export const processos: Processo[] = [
     ],
   },
   {
-    id: "p5", numero: "0012233-44.2024.8.19.0001", cliente: "Ricardo Menezes", parteContraria: "Seguradora Atlântico", area: "Consumidor",
+    id: "p5", numero: "0012233-84.2024.8.19.0001", cliente: "Ricardo Menezes", parteContraria: "Seguradora Atlântico", area: "Consumidor",
     vara: "7º Juizado Especial Cível/RJ", responsavel: "Dr. Felipe Rocha", valorCausa: 18900, proximoPrazo: "2024-09-27", status: "Em andamento",
     andamentos: [{ data: "2024-09-01", descricao: "Audiência de conciliação sem acordo" }],
   },
   {
-    id: "p6", numero: "1011223-55.2020.8.13.0024", cliente: "Fernanda Queiroz", parteContraria: "Imobiliária Central", area: "Imobiliário",
+    id: "p6", numero: "1011223-23.2020.8.13.0024", cliente: "Fernanda Queiroz", parteContraria: "Imobiliária Central", area: "Imobiliário",
     vara: "5ª Vara Cível de Belo Horizonte", responsavel: "Dr. Felipe Rocha", valorCausa: 62000, proximoPrazo: "—", status: "Arquivado",
     andamentos: [{ data: "2023-11-30", descricao: "Arquivamento definitivo após acordo homologado" }],
   },
   {
-    id: "p7", numero: "0023344-66.2024.8.16.0001", cliente: "Gustavo Pereira Lima", parteContraria: "Maria Clara Lima", area: "Família",
+    id: "p7", numero: "0023344-49.2024.8.16.0001", cliente: "Gustavo Pereira Lima", parteContraria: "Maria Clara Lima", area: "Família",
     vara: "1ª Vara de Família de Curitiba", responsavel: "Dra. Beatriz Lemos", valorCausa: 0, proximoPrazo: "2024-10-02", status: "Aguardando",
     andamentos: [{ data: "2024-09-08", descricao: "Aguardando parecer do Ministério Público" }],
   },
   {
-    id: "p8", numero: "1045566-77.2024.8.26.0100", cliente: "Construtora Horizonte Ltda", parteContraria: "Condomínio Solar das Flores", area: "Cível",
+    id: "p8", numero: "1045566-09.2024.8.26.0100", cliente: "Construtora Horizonte Ltda", parteContraria: "Condomínio Solar das Flores", area: "Cível",
     vara: "18ª Vara Cível - Foro Central/SP", responsavel: "Dr. Carlos Andrade", valorCausa: 215000, proximoPrazo: "2024-10-05", status: "Em andamento",
     andamentos: [{ data: "2024-09-14", descricao: "Réplica protocolada" }],
   },

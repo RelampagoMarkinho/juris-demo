@@ -110,8 +110,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <button className="icon-btn menu-btn" aria-label="Abrir menu" onClick={() => setMenuAberto(true)}>
             <Menu size={19} />
           </button>
-          <h1>{TITULOS[pathname] ?? (pathname.startsWith("/clientes/") ? "Perfil do cliente"
-            : pathname.startsWith("/documentos/modelo/") ? "Editor de modelo" : "Juris")}</h1>
+          <h1>{TITULOS[pathname] ?? (pathname.startsWith("/clientes/ver") ? "Perfil do cliente"
+            : pathname.startsWith("/documentos/modelo") ? "Editor de modelo" : "Juris")}</h1>
           <label className="search">
             <Search size={17} />
             <input placeholder="Pesquisar processos, clientes..." aria-label="Pesquisar" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { collection, doc, serverTimestamp, writeBatch } from "firebase/firestore";
+import { collection, doc, serverTimestamp, writeBatch } from "@/lib/local/firestore";
 import { db } from "./firebase";
 import { clientes, corretores, lancamentos, processos, receitaMensal } from "./mock";
 

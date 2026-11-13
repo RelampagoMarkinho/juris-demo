@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, serverTimestamp, setDoc } from "@/lib/local/firestore";
 import { db } from "./firebase";
 
 /** Dados do escritório (Configurações → Empresa). Guardados em /config/empresa. */

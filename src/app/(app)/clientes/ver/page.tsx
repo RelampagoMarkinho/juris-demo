@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Eye, Handshake, Plus, Mail, Pencil, Phone, Printer, Trash2, Upload, Wand2 } from "lucide-react";
 import { Badge, IconeArquivo } from "@/components/ui";
 import { useAuth } from "@/components/AuthProvider";
@@ -22,8 +22,13 @@ import { brl, CATEGORIAS_DOC, dataBR, iniciais, type Cliente, type Corretor, typ
 
 type Aba = "dados" | "documentos" | "gerados" | "processos" | "financeiro";
 
-export default function PerfilCliente() {
-  const { id } = useParams<{ id: string }>();
+// Versão estática (GitHub Pages): o cliente vem no endereço como ?id=...
+export default function PaginaPerfilCliente() {
+  return <Suspense fallback={<div className="card empty">Carregando...</div>}><PerfilCliente /></Suspense>;
+}
+
+function PerfilCliente() {
+  const id = useSearchParams().get("id") ?? "";
   const router = useRouter();
   const { usuario, pode, podeFazer } = useAuth();
   const { dados: clientes, carregando } = useColecao<Cliente>("clientes");

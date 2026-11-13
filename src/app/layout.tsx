@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider, themeScript } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import RegistrarPwa from "@/components/RegistrarPwa";
+import { caminho } from "@/lib/base";
 import "./globals.css";
 
-const fonte = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
-const serifa = Cinzel({ subsets: ["latin"], weight: ["500", "600", "700"], display: "swap", variable: "--font-serif" });
+// Fontes (licença OFL) guardadas no projeto: o build não depende do Google Fonts.
+const fonte = localFont({ src: "./fontes/plus-jakarta-sans.woff2", weight: "400 700", display: "swap" });
+const serifa = localFont({ src: "./fontes/cinzel.woff2", weight: "500 700", display: "swap", variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "Juris — Gestão para Advocacia",
   description: "Sistema de gestão para escritórios de advocacia: clientes, processos, documentos e financeiro",
-  applicationName: "NJ Advocacia",
-  icons: { icon: "/icon.png", apple: "/icones/apple-touch-icon.png" },
-  appleWebApp: { capable: true, title: "NJ Advocacia", statusBarStyle: "black-translucent" },
+  applicationName: "Juris",
+  icons: { icon: caminho("/icon.png"), apple: caminho("/icones/apple-touch-icon.png") },
+  appleWebApp: { capable: true, title: "Juris", statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
 };
 

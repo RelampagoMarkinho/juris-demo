@@ -3,7 +3,7 @@
 // O pagamento do mês vira um lançamento de Despesa paga no Financeiro (com contaPagarId + competencia),
 // então entra no saldo, nas despesas do mês e no gráfico. Um mês novo mostra de novo o que vence nele.
 
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "@/lib/local/firestore";
 import { db } from "./firebase";
 import { hojeISO } from "./db";
 import type { Lancamento } from "./mock";

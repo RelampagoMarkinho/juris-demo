@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "@/lib/local/auth";
 import { useTema, type Tema } from "@/components/ThemeProvider";
 import { useAuth } from "@/components/AuthProvider";
 import { auth, mensagemErro } from "@/lib/firebase";
